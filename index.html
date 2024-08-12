@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Number Validation</title>
+  </head>
+  <body>
+    <h1>Phone Number Validation</h1>
+
+    <form action="/validate" method="post">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+      <br><br>
+      <label for="phone">Phone number (ddd-ddd-dddd):</label>
+      <input type="text" id="phone" name="phone" pattern="\d{3}-\d{3}-\d{4}" required>
+      <br><br>
+      <button type="submit">Submit</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+      document.querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const data = {};
+        formData.forEach((value, key) => data[key] = value);
+
+        fetch('/validate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(result => {
+          document.getElementById('result').textContent = `Result: ${result.message}`;
+        })
+        .catch(error => {
+          document.getElementById('result').textContent =  `Error: ${error}`;
+        });
+      });
+    </script>
+  </body>
+</html>
